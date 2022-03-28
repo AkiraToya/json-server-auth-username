@@ -14,31 +14,24 @@ describe('Register user', () => {
 	test('[HAPPY] Register and return access token and user', async () => {
 		const res = await rq
 			.post('/register')
-			.send({ email: 'albert@mail.com', password: 'azerty123', name: 'Albert' })
+			.send({ username: 'newuser', password: 'azerty123', name: 'Albert' })
 
 		expect(res.status).toBe(201)
 		expect(res.body.accessToken).toMatch(/^[\w-]*\.[\w-]*\.[\w-]*$/)
-		expect(res.body.user).toStrictEqual({ id: 2, email: 'albert@mail.com', name: 'Albert' })
-	})
-
-	test('[SAD] Bad email', () => {
-		return rq
-			.post('/register')
-			.send({ email: 'albert@', password: 'azerty123' })
-			.expect(400, /email format/i)
+		expect(res.body.user).toStrictEqual({ id: 2, username: 'newuser', name: 'Albert' })
 	})
 
 	test('[SAD] Lack password', () => {
 		return rq
 			.post('/register')
-			.send({ email: 'albert@mail.com' })
+			.send({ username: 'username' })
 			.expect(400, /required/i)
 	})
 
-	test('[SAD] Email already exists', () => {
+	test('[SAD] Username already exists', () => {
 		return rq
 			.post('/register')
-			.send({ email: 'jeremy@mail.com', password: 'azerty123' })
+			.send({ username: 'username', password: 'azerty123' })
 			.expect(400, /already/i)
 	})
 
@@ -64,7 +57,7 @@ describe('Login user', () => {
 	test('[SAD] User does not exist', () => {
 		return rq
 			.post('/login')
-			.send({ ...USER, email: 'arthur@mail.com' })
+			.send({ ...USER, username: 'arthur@mail.com' })
 			.expect(400, /cannot find user/i)
 	})
 
@@ -87,7 +80,7 @@ describe('Query user', () => {
 		const res = await rq.get('/users')
 		expect(res.ok).toBe(true)
 		expect(res.body).toHaveLength(1)
-		expect(res.body[0]).toMatchObject({ email: 'jeremy@mail.com' })
+		expect(res.body[0]).toMatchObject({ username: 'username' })
 	})
 })
 
@@ -106,10 +99,6 @@ describe('Update user', () => {
 			.expect(200, /"age": 20/)
 	})
 
-	test('[HAPPY] modify email', () => {
-		return rq.patch('/users/1').send({ email: 'arthur@mail.com' }).expect(200)
-	})
-
 	test('[HAPPY] modify and hash new password', async () => {
 		const password = '965dsd3si'
 		const { body, status } = await rq.patch('/users/1').send({ password })
@@ -118,17 +107,10 @@ describe('Update user', () => {
 		expect(body.password).not.toBe(password)
 	})
 
-	test('[SAD] modify email with wrong input', () => {
-		return rq
-			.patch('/users/1')
-			.send({ email: 'arthur' })
-			.expect(400, /email format/i)
-	})
-
 	test('[SAD] Put with only one property', () => {
 		return rq
 			.put('/users/1')
-			.send({ email: 'arthur@mail.com' })
+			.send({ username: 'username2' })
 			.expect(400, /required/i)
 	})
 })

@@ -3,7 +3,6 @@ import { Handler, Router } from 'express'
 import * as jwt from 'jsonwebtoken'
 import { bodyParsingHandler, errorHandler } from './shared-middlewares'
 import {
-	EMAIL_REGEX,
 	JWT_EXPIRES_IN,
 	JWT_SECRET_KEY,
 	MIN_PASSWORD_LENGTH,
@@ -12,7 +11,7 @@ import {
 
 interface User {
 	id: string
-	email: string
+	username: string
 	password: string
 	[key: string]: any // Allow any other field
 }
@@ -20,36 +19,31 @@ interface User {
 type ValidateHandler = ({ required }: { required: boolean }) => Handler
 
 /**
- * Validate email and password
+ * Validate username and password
  */
 const validate: ValidateHandler =
 	({ required }) =>
-	(req, res, next) => {
-		const { email, password } = req.body as Partial<User>
+		(req, res, next) => {
+			const { username, password } = req.body as Partial<User>
 
-		if (required && (!email || !email.trim() || !password || !password.trim())) {
-			res.status(400).jsonp('Email and password are required')
-			return
+			if (required && (!username || !username.trim() || !password || !password.trim())) {
+				res.status(400).jsonp('Username and password are required')
+				return
+			}
+
+			if (password && password.length < MIN_PASSWORD_LENGTH) {
+				res.status(400).jsonp('Password is too short')
+				return
+			}
+
+			next()
 		}
-
-		if (email && !email.match(EMAIL_REGEX)) {
-			res.status(400).jsonp('Email format is invalid')
-			return
-		}
-
-		if (password && password.length < MIN_PASSWORD_LENGTH) {
-			res.status(400).jsonp('Password is too short')
-			return
-		}
-
-		next()
-	}
 
 /**
  * Register / Create a user
  */
 const create: Handler = (req, res, next) => {
-	const { email, password, ...rest } = req.body as User
+	const { username, password, ...rest } = req.body as User
 	const { db } = req.app
 
 	if (db == null) {
@@ -59,9 +53,9 @@ const create: Handler = (req, res, next) => {
 		throw Error('You must bind the router db to the app')
 	}
 
-	const existingUser = db.get('users').find({ email }).value()
+	const existingUser = db.get('users').find({ username }).value()
 	if (existingUser) {
-		res.status(400).jsonp('Email already exists')
+		res.status(400).jsonp('Username already exists')
 		return
 	}
 
@@ -73,7 +67,7 @@ const create: Handler = (req, res, next) => {
 			try {
 				return db
 					.get('users')
-					.insert({ email, password: hash, ...rest })
+					.insert({ username, password: hash, ...rest })
 					.write()
 			} catch (error) {
 				throw Error('You must add a "users" collection to your db')
@@ -82,7 +76,7 @@ const create: Handler = (req, res, next) => {
 		.then((user: User) => {
 			return new Promise<{ accessToken: string; user: User }>((resolve, reject) => {
 				jwt.sign(
-					{ email },
+					{ username },
 					JWT_SECRET_KEY,
 					{ expiresIn: JWT_EXPIRES_IN, subject: String(user.id) },
 					(error, accessToken) => {
@@ -103,14 +97,14 @@ const create: Handler = (req, res, next) => {
  * Login
  */
 const login: Handler = (req, res, next) => {
-	const { email, password } = req.body as User
+	const { username, password } = req.body as User
 	const { db } = req.app
 
 	if (db == null) {
 		throw Error('You must bind the router db to the app')
 	}
 
-	const user = db.get('users').find({ email }).value() as User
+	const user = db.get('users').find({ username }).value() as User
 
 	if (!user) {
 		res.status(400).jsonp('Cannot find user')
@@ -124,7 +118,7 @@ const login: Handler = (req, res, next) => {
 
 			return new Promise<string>((resolve, reject) => {
 				jwt.sign(
-					{ email },
+					{ username },
 					JWT_SECRET_KEY,
 					{ expiresIn: JWT_EXPIRES_IN, subject: String(user.id) },
 					(error, accessToken) => {
@@ -147,7 +141,7 @@ const login: Handler = (req, res, next) => {
 /**
  * Patch and Put user
  */
-// TODO: create new access token when password or email changes
+// TODO: create new access token when password or username changes
 const update: Handler = (req, res, next) => {
 	const { password } = req.body as Partial<User>
 

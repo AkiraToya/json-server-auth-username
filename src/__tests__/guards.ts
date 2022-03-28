@@ -7,7 +7,7 @@ let db: { users: any[]; messages: any[]; secrets: any[] }
 
 beforeEach(async () => {
 	db = {
-		users: [{ id: 1, email: 'albert@gmail.com' }],
+		users: [{ id: 1, username: 'albert' }],
 		messages: [
 			{ id: 1, text: 'other', userId: 1 },
 			{ id: 2, text: 'mine', userId: 2 },
@@ -85,7 +85,7 @@ describe('640: owner can read/write, logged can read', () => {
 test('[HAPPY] create another user after setting guards', async () => {
 	const res = await rq
 		.post('/users')
-		.send({ email: 'arthur@email.com', password: '1234' })
+		.send({ username: 'arthur', password: '1234' })
 		.expect(201)
 
 	const otherBearer = { Authorization: `Bearer ${res.body.accessToken}` }
@@ -95,7 +95,7 @@ test('[HAPPY] create another user after setting guards', async () => {
 	await rq
 		.put('/users/3')
 		.set(otherBearer)
-		.send({ email: 'arthur@email.com', password: '1234' })
+		.send({ username: 'arthur', password: '1234' })
 		.expect(200)
 })
 

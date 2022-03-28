@@ -1,3 +1,10 @@
+# JSON Server Auth Username
+
+This is module extends from JSON Server Auth for using username and password, not email.
+This is personal project and not maintained for public. I'm not the real author, just modify it for my needs.
+
+Real Author url: https://github.com/jeremyben/json-server-auth
+
 # 🔐 JSON Server Auth
 
 JWT authentication middleware for **[JSON Server](https://github.com/typicode/json-server)**

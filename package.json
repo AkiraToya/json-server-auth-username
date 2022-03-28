@@ -1,6 +1,6 @@
 {
-	"name": "json-server-auth",
-	"description": "Authentication middleware for JSON Server",
+	"name": "json-server-auth-username",
+	"description": "Authentication middleware for JSON Server using username",
 	"version": "2.1.0",
 	"author": "Jeremy Bensimon",
 	"repository": "github:jeremyben/json-server-auth",
@@ -19,7 +19,7 @@
 	"engineStrict": true,
 	"scripts": {
 		"build": "rimraf dist && tsc -p tsconfig.build.json",
-		"prepublishOnly": "yarn run build",
+		"prepublishOnly": "npm run build",
 		"test": "jest",
 		"test:file": "jest --testPathPattern",
 		"test:watch": "jest --watch --verbose false",
@@ -73,6 +73,7 @@
 		"auth",
 		"authentication",
 		"authorization",
-		"jwt"
+		"jwt",
+		"username"
 	]
 }

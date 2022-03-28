@@ -2,7 +2,7 @@ import { Application } from 'express'
 import * as jsonServer from 'json-server'
 import * as jsonServerAuth from '../..'
 
-export const USER = { email: 'jeremy@mail.com', password: '123456', name: 'Jeremy' }
+export const USER = { username: 'username', password: '123456', name: 'Jeremy' }
 
 export function inMemoryJsonServer(
 	db: object = {},

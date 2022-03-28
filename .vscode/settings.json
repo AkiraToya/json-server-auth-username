@@ -1,8 +1,10 @@
 {
 	"editor.formatOnSave": true,
-	"npm.packageManager": "yarn",
+	"npm.packageManager": "npm",
 	"prettier.requireConfig": true,
-	"prettier.disableLanguages": ["markdown"],
+	"prettier.disableLanguages": [
+		"markdown"
+	],
 	"rest-client.enableTelemetry": false,
 	"rest-client.defaultHeaders": {
 		"User-Agent": "vscode-restclient",

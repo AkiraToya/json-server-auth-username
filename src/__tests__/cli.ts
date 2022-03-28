@@ -4,7 +4,7 @@ import { join } from 'path'
 import * as treeKill from 'tree-kill'
 
 const JSON_DB_PATH = join(__dirname, 'db.json')
-const cmd = `yarn ts-node --transpile-only src/bin "${JSON_DB_PATH}"`
+const cmd = `npm ts-node --transpile-only src/bin "${JSON_DB_PATH}"`
 
 beforeAll(() => {
 	const db = {

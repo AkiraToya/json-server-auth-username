@@ -66,7 +66,7 @@ const privateOnly: Handler = (req, res, next) => {
 		}
 
 		// TODO: handle query params instead of removing them
-		const path = req.url.replace(`?${stringify(req.query)}`, '')
+		const path = req.url.replace(`?${req.query}`, '')
 		const [, mod, resource, id] = path.split('/')
 
 		// Creation and replacement
@@ -167,13 +167,13 @@ type ReadWriteBranch = ({ read, write }: { read: Handler; write: Handler }) => H
  */
 const branch: ReadWriteBranch =
 	({ read, write }) =>
-	(req, res, next) => {
-		if (req.method === 'GET') {
-			read(req, res, next)
-		} else {
-			write(req, res, next)
+		(req, res, next) => {
+			if (req.method === 'GET') {
+				read(req, res, next)
+			} else {
+				write(req, res, next)
+			}
 		}
-	}
 
 /**
  * Remove guard mod from baseUrl, so lowdb can handle the resource.
