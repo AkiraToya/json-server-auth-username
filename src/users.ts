@@ -130,7 +130,8 @@ const login: Handler = (req, res, next) => {
 		})
 		.then((accessToken: string) => {
 			const { password: _, ...userWithoutPassword } = user
-			res.status(200).jsonp({ accessToken, user: userWithoutPassword })
+			const accessControls = db.get('accessControls').filter(ac => user.accessControls.includes(ac.id.toString()))
+			res.status(200).jsonp({ accessToken, user: { ...userWithoutPassword, accessControls } })
 		})
 		.catch((err) => {
 			if (err === 400) res.status(400).jsonp('Incorrect password')
