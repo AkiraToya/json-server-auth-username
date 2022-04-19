@@ -74,21 +74,21 @@ const create: Handler = (req, res, next) => {
 			}
 		})
 		.then((user: User) => {
-			return new Promise<{ accessToken: string; user: User }>((resolve, reject) => {
+			return new Promise<{ token: string; user: User }>((resolve, reject) => {
 				jwt.sign(
 					{ username },
 					JWT_SECRET_KEY,
 					{ expiresIn: JWT_EXPIRES_IN, subject: String(user.id) },
-					(error, accessToken) => {
+					(error, token) => {
 						if (error) reject(error)
-						else resolve({ accessToken: accessToken!, user })
+						else resolve({ token: token!, user })
 					}
 				)
 			})
 		})
-		.then(({ accessToken, user }) => {
+		.then(({ token, user }) => {
 			const { password: _, ...userWithoutPassword } = user
-			res.status(201).jsonp({ accessToken, user: userWithoutPassword })
+			res.status(201).jsonp({ token, user: userWithoutPassword })
 		})
 		.catch(next)
 }
@@ -121,21 +121,21 @@ const login: Handler = (req, res, next) => {
 					{ username },
 					JWT_SECRET_KEY,
 					{ expiresIn: JWT_EXPIRES_IN, subject: String(user.id) },
-					(error, accessToken) => {
+					(error, token) => {
 						if (error) reject(error)
-						else resolve(accessToken!)
+						else resolve(token!)
 					}
 				)
 			})
 		})
-		.then((accessToken: string) => {
+		.then((token: string) => {
 			const { password: _, ...userWithoutPassword } = user
 			const accessControlsDb = db.get('accessControls')
 			let accessControls = []
 			if (accessControlsDb && user.accessControls && Array.isArray(user.accessControls))
 				accessControls = db.get('accessControls').filter(ac => user.accessControls.includes(ac.id.toString()))
 
-			res.status(200).jsonp({ accessToken, user: { ...userWithoutPassword, accessControls } })
+			res.status(200).jsonp({ token, user: { ...userWithoutPassword, accessControls } })
 		})
 		.catch((err) => {
 			if (err === 400) res.status(400).jsonp('Incorrect password')

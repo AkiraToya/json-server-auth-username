@@ -17,7 +17,7 @@ describe('Register user', () => {
 			.send({ username: 'newuser', password: 'azerty123', name: 'Albert' })
 
 		expect(res.status).toBe(201)
-		expect(res.body.accessToken).toMatch(/^[\w-]*\.[\w-]*\.[\w-]*$/)
+		expect(res.body.token).toMatch(/^[\w-]*\.[\w-]*\.[\w-]*$/)
 		expect(res.body.user).toStrictEqual({ id: 2, username: 'newuser', name: 'Albert' })
 	})
 
@@ -51,7 +51,7 @@ describe('Login user', () => {
 		return rq
 			.post('/login')
 			.send(USER)
-			.expect(200, /"accessToken": ".*"/)
+			.expect(200, /"token": ".*"/)
 	})
 
 	test('[SAD] User does not exist', () => {

@@ -26,7 +26,7 @@ beforeEach(async () => {
 
 	// Create user (will have id:2) and keep access token
 	const res = await rq.post('/register').send(USER)
-	bearer = { Authorization: `Bearer ${res.body.accessToken}` }
+	bearer = { Authorization: `Bearer ${res.body.token}` }
 })
 
 describe('600: owner can read/write', () => {
@@ -88,7 +88,7 @@ test('[HAPPY] create another user after setting guards', async () => {
 		.send({ username: 'arthur', password: '1234' })
 		.expect(201)
 
-	const otherBearer = { Authorization: `Bearer ${res.body.accessToken}` }
+	const otherBearer = { Authorization: `Bearer ${res.body.token}` }
 
 	await rq.get('/users/3').set(otherBearer).expect(200)
 

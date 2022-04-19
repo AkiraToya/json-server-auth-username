@@ -78,7 +78,7 @@ The response contains the JWT access token (expiration time of 1 hour), and the 
 ```http
 201 Created
 {
-  "accessToken": "xxx.xxx.xxx",
+  "token": "xxx.xxx.xxx",
   "user": {
     "id": 1,
     "email": "olivier@mail.com"
@@ -127,7 +127,7 @@ The response contains the JWT access token (expiration time of 1 hour), and the 
 ```http
 200 OK
 {
-  "accessToken": "xxx.xxx.xxx",
+  "token": "xxx.xxx.xxx",
   "user": {
     "id": 1,
     "email": "olivier@mail.com",

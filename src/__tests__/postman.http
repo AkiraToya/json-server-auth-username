@@ -1,6 +1,6 @@
 # Content-Type predefined to application/json in settings.json
 @root = http://localhost:3000
-@jwt = Bearer {{signin.response.body.$.accessToken}}
+@jwt = Bearer {{signin.response.body.$.token}}
 
 ###
 
