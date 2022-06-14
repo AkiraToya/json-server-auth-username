@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.5](https://github.com/jeremyben/json-server-auth/compare/v2.1.4...v2.1.5) (2022-06-14)
+
 ### [2.1.4](https://github.com/jeremyben/json-server-auth/compare/v2.1.0...v2.1.4) (2022-04-19)
 
 ## [2.1.0](https://github.com/jeremyben/json-server-auth/compare/v2.0.2...v2.1.0) (2021-07-21)
