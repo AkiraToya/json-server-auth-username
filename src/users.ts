@@ -132,8 +132,8 @@ const login: Handler = (req, res, next) => {
 			const { password: _, ...userWithoutPassword } = user
 			const accessControlsDb = db.get('accessControls')
 			let accessControls = []
-			if (accessControlsDb && user.accessControls && Array.isArray(user.accessControls))
-				accessControls = db.get('accessControls').filter(ac => user.accessControls.includes(ac.id.toString()))
+			if (accessControlsDb && user.access_controls && Array.isArray(user.access_controls))
+				accessControls = db.get('accessControls').filter(ac => user.access_controls.includes(ac.id.toString()))
 
 			res.status(200).jsonp({ token, user: { ...userWithoutPassword, accessControls } })
 		})
